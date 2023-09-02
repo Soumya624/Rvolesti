@@ -99,25 +99,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ode_solve
-Rcpp::List ode_solve(Rcpp::Nullable<unsigned int> n, Rcpp::Nullable<double> step_size, Rcpp::Nullable<unsigned int> order, Rcpp::Nullable<unsigned int> dimension, Rcpp::Nullable<double> initial_time, Rcpp::Function F, Rcpp::Nullable<Rcpp::CharacterVector> method, Rcpp::Nullable<Rcpp::List> domains, Rcpp::Nullable<Rcpp::List> initial_conditions);
-RcppExport SEXP _volesti_ode_solve(SEXP nSEXP, SEXP step_sizeSEXP, SEXP orderSEXP, SEXP dimensionSEXP, SEXP initial_timeSEXP, SEXP FSEXP, SEXP methodSEXP, SEXP domainsSEXP, SEXP initial_conditionsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type n(nSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type step_size(step_sizeSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type order(orderSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type dimension(dimensionSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type initial_time(initial_timeSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Function >::type F(FSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::CharacterVector> >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type domains(domainsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type initial_conditions(initial_conditionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(ode_solve(n, step_size, order, dimension, initial_time, F, method, domains, initial_conditions));
-    return rcpp_result_gen;
-END_RCPP
-}
 // poly_gen
 Rcpp::NumericMatrix poly_gen(int kind_gen, bool Vpoly_gen, bool Zono_gen, int dim_gen, int m_gen, Rcpp::Nullable<double> seed);
 RcppExport SEXP _volesti_poly_gen(SEXP kind_genSEXP, SEXP Vpoly_genSEXP, SEXP Zono_genSEXP, SEXP dim_genSEXP, SEXP m_genSEXP, SEXP seedSEXP) {
@@ -184,34 +165,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rounding
-Rcpp::List rounding(Rcpp::Reference P, Rcpp::Nullable<std::string> method, Rcpp::Nullable<double> seed);
-RcppExport SEXP _volesti_rounding(SEXP PSEXP, SEXP methodSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type method(methodSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(rounding(P, method, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sample_points
-Rcpp::NumericMatrix sample_points(Rcpp::Nullable<Rcpp::Reference> P, Rcpp::Nullable<unsigned int> n, Rcpp::Nullable<Rcpp::List> random_walk, Rcpp::Nullable<Rcpp::List> distribution, Rcpp::Nullable<double> seed);
-RcppExport SEXP _volesti_sample_points(SEXP PSEXP, SEXP nSEXP, SEXP random_walkSEXP, SEXP distributionSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Reference> >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<unsigned int> >::type n(nSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type random_walk(random_walkSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type distribution(distributionSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(sample_points(P, n, random_walk, distribution, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
 // writeSdpaFormatFile
 void writeSdpaFormatFile(Rcpp::Nullable<Rcpp::Reference> spectrahedron, Rcpp::Nullable<Rcpp::NumericVector> objectiveFunction, Rcpp::Nullable<std::string> outputFile);
 RcppExport SEXP _volesti_writeSdpaFormatFile(SEXP spectrahedronSEXP, SEXP objectiveFunctionSEXP, SEXP outputFileSEXP) {
@@ -235,34 +188,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// volume
-Rcpp::List volume(Rcpp::Reference P, Rcpp::Nullable<Rcpp::List> settings, Rcpp::Nullable<std::string> rounding, Rcpp::Nullable<double> seed);
-RcppExport SEXP _volesti_volume(SEXP PSEXP, SEXP settingsSEXP, SEXP roundingSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Reference >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type settings(settingsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<std::string> >::type rounding(roundingSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(volume(P, settings, rounding, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// zono_approx
-Rcpp::List zono_approx(Rcpp::Reference Z, Rcpp::Nullable<bool> fit_ratio, Rcpp::Nullable<Rcpp::List> settings, Rcpp::Nullable<double> seed);
-RcppExport SEXP _volesti_zono_approx(SEXP ZSEXP, SEXP fit_ratioSEXP, SEXP settingsSEXP, SEXP seedSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::Reference >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<bool> >::type fit_ratio(fit_ratioSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::List> >::type settings(settingsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::Nullable<double> >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(zono_approx(Z, fit_ratio, settings, seed));
-    return rcpp_result_gen;
-END_RCPP
-}
+
+RcppExport SEXP _rcpp_module_boot_polytopes();
+RcppExport SEXP _rcpp_module_boot_spectrahedron();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_volesti_copula", (DL_FUNC) &_volesti_copula, 6},
@@ -272,18 +200,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_volesti_frustum_of_simplex", (DL_FUNC) &_volesti_frustum_of_simplex, 2},
     {"_volesti_geweke", (DL_FUNC) &_volesti_geweke, 3},
     {"_volesti_inner_ball", (DL_FUNC) &_volesti_inner_ball, 2},
-    {"_volesti_ode_solve", (DL_FUNC) &_volesti_ode_solve, 9},
     {"_volesti_poly_gen", (DL_FUNC) &_volesti_poly_gen, 6},
     {"_volesti_psrf_multivariate", (DL_FUNC) &_volesti_psrf_multivariate, 1},
     {"_volesti_psrf_univariate", (DL_FUNC) &_volesti_psrf_univariate, 2},
     {"_volesti_raftery", (DL_FUNC) &_volesti_raftery, 4},
     {"_volesti_rotating", (DL_FUNC) &_volesti_rotating, 3},
-    {"_volesti_rounding", (DL_FUNC) &_volesti_rounding, 3},
-    {"_volesti_sample_points", (DL_FUNC) &_volesti_sample_points, 5},
     {"_volesti_writeSdpaFormatFile", (DL_FUNC) &_volesti_writeSdpaFormatFile, 3},
     {"_volesti_loadSdpaFormatFile", (DL_FUNC) &_volesti_loadSdpaFormatFile, 1},
-    {"_volesti_volume", (DL_FUNC) &_volesti_volume, 4},
-    {"_volesti_zono_approx", (DL_FUNC) &_volesti_zono_approx, 4},
+    {"_rcpp_module_boot_polytopes", (DL_FUNC) &_rcpp_module_boot_polytopes, 0},
+    {"_rcpp_module_boot_spectrahedron", (DL_FUNC) &_rcpp_module_boot_spectrahedron, 0},
     {NULL, NULL, 0}
 };
 

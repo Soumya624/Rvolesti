@@ -176,28 +176,6 @@ inner_ball <- function(P, lpsolve = NULL) {
     .Call(`_volesti_inner_ball`, P, lpsolve)
 }
 
-#' Solve an ODE of the form dx^n / dt^n = F(x, t)
-#'
-#' @param n The number of steps.
-#' @param step_size The step size.
-#' @param order The ODE order (default is n = 1)
-#' @param dimension The dimension of each derivative
-#' @param initial_time The initial time
-#' @param F The function oracle F(x, t) in the ODE.
-#' @param method The method to be used
-#' @param initial_conditions The initial conditions provided to the solver. Must be provided in a list with keys "x_1", ..., "x_n" and column vectors as values. The state "x_n" represents the (n-1)-th order derivative with respect to time
-#' @param domains A list of n H-polytopes with keys "P_1", "P_2", ..., "P_n" that correspond to each derivative's domain
-#'
-#' @return A list which contains elements "x_1", ..., "x_n" representing each derivative results. Each "x_i" corresponds to a d x n matrix where each column represents a certain timestep of the solver.
-#'
-#' @examples
-#' # Please visit the examples directory on examples demonstrating usage of the ODE solvers.
-#'
-#' @export
-ode_solve <- function(n, step_size, order, dimension, initial_time, F, method, domains = NULL, initial_conditions = NULL) {
-    .Call(`_volesti_ode_solve`, n, step_size, order, dimension, initial_time, F, method, domains, initial_conditions)
-}
-
 #' An internal Rccp function as a polytope generator
 #'
 #' @param kind_gen An integer to declare the type of the polytope.
@@ -279,88 +257,6 @@ rotating <- function(P, T = NULL, seed = NULL) {
     .Call(`_volesti_rotating`, P, T, seed)
 }
 
-#' Internal rcpp function for the rounding of a convex polytope
-#'
-#' @param P A convex polytope (H- or V-representation or zonotope).
-#' @param method Optional. The method to use for rounding, a) \code{'min_ellipsoid'} for the method based on mimimmum volume enclosing ellipsoid of a uniform sample from P, b) \code{'max_ellipsoid'} for the method based on maximum volume enclosed ellipsoid in P, (c) \code{'isotropy'} for the method based on isotropy. The default method is \code{'min_ellipsoid'} for all the representations.
-#' @param seed Optional. A fixed seed for the number generator.
-#'
-#' @keywords internal
-#'
-#' @return A numerical matrix that describes the rounded polytope, a numerical matrix of the inverse linear transofmation that is applied on the input polytope, the numerical vector the the input polytope is shifted and the determinant of the matrix of the linear transformation that is applied on the input polytope.
-rounding <- function(P, method = NULL, seed = NULL) {
-    .Call(`_volesti_rounding`, P, method, seed)
-}
-
-#' Sample uniformly, normally distributed, or logconcave distributed points from a convex Polytope (H-polytope, V-polytope, zonotope or intersection of two V-polytopes).
-#'
-#' @param P A convex polytope. It is an object from class (a) Hpolytope or (b) Vpolytope or (c) Zonotope or (d) VpolytopeIntersection.
-#' @param n The number of points that the function is going to sample from the convex polytope.
-#' @param random_walk Optional. A list that declares the random walk and some related parameters as follows:
-#' \itemize{
-#' \item{\code{walk} }{ A string to declare the random walk: i) \code{'CDHR'} for Coordinate Directions Hit-and-Run, ii) \code{'RDHR'} for Random Directions Hit-and-Run, iii) \code{'BaW'} for Ball Walk, iv) \code{'BiW'} for Billiard walk, v) \code{'dikin'} for dikin walk, vi) \code{'vaidya'} for vaidya walk, vii) \code{'john'} for john walk, viii) \code{'BCDHR'} boundary sampling by keeping the extreme points of CDHR or ix) \code{'BRDHR'} boundary sampling by keeping the extreme points of RDHR x) \code{'HMC'} for Hamiltonian Monte Carlo (logconcave densities) xi) \code{'ULD'} for Underdamped Langevin Dynamics using the Randomized Midpoint Method xii) \code{'ExactHMC'} for exact Hamiltonian Monte Carlo with reflections (spherical Gaussian or exponential distribution). The default walk is \code{'aBiW'} for the uniform distribution or \code{'CDHR'} for the Gaussian distribution and H-polytopes and \code{'BiW'} or \code{'RDHR'} for the same distributions and V-polytopes and zonotopes.}
-#' \item{\code{walk_length} }{ The number of the steps per generated point for the random walk. The default value is \eqn{1}.}
-#' \item{\code{nburns} }{ The number of points to burn before start sampling. The default value is \eqn{1}.}
-#' \item{\code{starting_point} }{ A \eqn{d}-dimensional numerical vector that declares a starting point in the interior of the polytope for the random walk. The default choice is the center of the ball as that one computed by the function \code{inner_ball()}.}
-#' \item{\code{BaW_rad} }{ The radius for the ball walk.}
-#' \item{\code{L} }{ The maximum length of the billiard trajectory or the radius for the step of dikin, vaidya or john walk.}
-#' \item{\code{solver} }{ Specify ODE solver for logconcave sampling. Options are i) leapfrog, ii) euler iii) runge-kutta iv) richardson}
-#' \item{\code{step_size }{ Optionally chosen step size for logconcave sampling. Defaults to a theoretical value if not provided.}
-#' }
-#' @param distribution Optional. A list that declares the target density and some related parameters as follows:
-#' \itemize{
-#' \item{\code{density} }{ A string: (a) \code{'uniform'} for the uniform distribution or b) \code{'gaussian'} for the multidimensional spherical distribution c) \code{logconcave} with form proportional to exp(-f(x)) where f(x) is L-smooth and m-strongly-convex d) \code{'exponential'} for the exponential distribution. The default target distribution is the uniform distribution.}
-#' \item{\code{variance} }{ The variance of the multidimensional spherical gaussian or the exponential distribution. The default value is 1.}
-#' \item{\code{mode} }{ A \eqn{d}-dimensional numerical vector that declares the mode of the Gaussian distribution. The default choice is the center of the as that one computed by the function \code{inner_ball()}.}
-#' \item{\code{bias} }{ The bias vector for the exponential distribution. The default vector is \eqn{c_1 = 1} and \eqn{c_i = 0} for \eqn{i \neq 1}.}
-#' \item{\code{L_} }{ Smoothness constant (for logconcave). }
-#' \item{\code{m} }{ Strong-convexity constant (for logconcave). }
-#' \item{\code{negative_logprob} }{ Negative log-probability (for logconcave). }
-#' \item{\code{negative_logprob_gradient} }{ Negative log-probability gradient (for logconcave). }
-#' }
-#' @param seed Optional. A fixed seed for the number generator.
-#'
-#' @references \cite{Robert L. Smith,
-#' \dQuote{Efficient Monte Carlo Procedures for Generating Points Uniformly Distributed Over Bounded Regions,} \emph{Operations Research,} 1984.},
-#'
-#' @references \cite{B.T. Polyak, E.N. Gryazina,
-#' \dQuote{Billiard walk - a new sampling algorithm for control and optimization,} \emph{IFAC Proceedings Volumes,} 2014.},
-#'
-#' @references \cite{Y. Chen, R. Dwivedi, M. J. Wainwright and B. Yu,
-#' \dQuote{Fast MCMC Sampling Algorithms on Polytopes,} \emph{Journal of Machine Learning Research,} 2018.}
-#'
-#' @references \cite{Lee, Yin Tat, Ruoqi Shen, and Kevin Tian,
-#' \dQuote{"Logsmooth Gradient Concentration and Tighter Runtimes for Metropolized Hamiltonian Monte Carlo,"} \emph{arXiv preprint arXiv:2002.04121}, 2020.}
-#'
-#' @references \cite{Shen, Ruoqi, and Yin Tat Lee,
-#' \dQuote{"The randomized midpoint method for log-concave sampling.",} \emph{Advances in Neural Information Processing Systems}, 2019.}
-#'
-#' @references \cite{Augustin Chevallier, Sylvain Pion, Frederic Cazals,
-#' \dQuote{"Hamiltonian Monte Carlo with boundary reflections, and application to polytope volume calculations,"} \emph{Research Report preprint hal-01919855}, 2018.}
-#'
-#' @return A \eqn{d\times n} matrix that contains, column-wise, the sampled points from the convex polytope P.
-#' @examples
-#' # uniform distribution from the 3d unit cube in H-representation using ball walk
-#' P = gen_cube(3, 'H')
-#' points = sample_points(P, n = 100, random_walk = list("walk" = "BaW", "walk_length" = 5))
-#'
-#' # gaussian distribution from the 2d unit simplex in H-representation with variance = 2
-#' A = matrix(c(-1,0,0,-1,1,1), ncol=2, nrow=3, byrow=TRUE)
-#' b = c(0,0,1)
-#' P = Hpolytope$new(A,b)
-#' points = sample_points(P, n = 100, distribution = list("density" = "gaussian", "variance" = 2))
-#'
-#' # uniform points from the boundary of a 2-dimensional random H-polytope
-#' P = gen_rand_hpoly(2,20)
-#' points = sample_points(P, n = 100, random_walk = list("walk" = "BRDHR"))
-#'
-#' # For sampling from logconcave densities see the examples directory
-#'
-#' @export
-sample_points <- function(P, n, random_walk = NULL, distribution = NULL, seed = NULL) {
-    .Call(`_volesti_sample_points`, P, n, random_walk, distribution, seed)
-}
-
 #' Write a SDPA format file
 #'
 #' Outputs a spectrahedron (the matrices defining a linear matrix inequality) and a vector (the objective function)
@@ -397,63 +293,5 @@ writeSdpaFormatFile <- function(spectrahedron = NULL, objectiveFunction = NULL, 
 #' @export
 loadSdpaFormatFile <- function(inputFile = NULL) {
     .Call(`_volesti_loadSdpaFormatFile`, inputFile)
-}
-
-#' The main function for volume approximation of a convex Polytope (H-polytope, V-polytope, zonotope or intersection of two V-polytopes). It returns a list with two elements: (a) the logarithm of the estimated volume and (b) the estimated volume
-#'
-#' For the volume approximation can be used three algorithms. Either CoolingBodies (CB) or SequenceOfBalls (SOB) or CoolingGaussian (CG). An H-polytope with \eqn{m} facets is described by a \eqn{m\times d} matrix \eqn{A} and a \eqn{m}-dimensional vector \eqn{b}, s.t.: \eqn{P=\{x\ |\  Ax\leq b\} }. A V-polytope is defined as the convex hull of \eqn{m} \eqn{d}-dimensional points which correspond to the vertices of P. A zonotope is desrcibed by the Minkowski sum of \eqn{m} \eqn{d}-dimensional segments.
-#'
-#' @param P A convex polytope. It is an object from class a) Hpolytope or b) Vpolytope or c) Zonotope or d) VpolytopeIntersection.
-#' @param settings Optional. A list that declares which algorithm, random walk and values of parameters to use, as follows:
-#' \itemize{
-#' \item{\code{algorithm} }{ A string to set the algorithm to use: a) \code{'CB'} for CB algorithm, b) \code{'SoB'} for SOB algorithm or b) \code{'CG'} for CG algorithm. The defalut algorithm is \code{'CB'}.}
-#' \item{\code{error} }{ A numeric value to set the upper bound for the approximation error. The default value is \eqn{1} for SOB algorithm and \eqn{0.1} otherwise.}
-#' \item{\code{random_walk} }{ A string that declares the random walk method: a) \code{'CDHR'} for Coordinate Directions Hit-and-Run, b) \code{'RDHR'} for Random Directions Hit-and-Run, c) \code{'BaW'} for Ball Walk, or \code{'BiW'} for Billiard walk. For CB algorithm the default walk is \code{'BiW'}. For CG and SOB algorithms the default walk is \code{'CDHR'} for H-polytopes and \code{'RDHR'} for the other representations.}
-#' \item{\code{walk_length} }{ An integer to set the number of the steps for the random walk. The default value is \eqn{\lfloor 10 + d/10\rfloor} for \code{'SOB'} and \eqn{1} otherwise.}
-#' \item{\code{win_len} }{ The length of the sliding window for CB or CG algorithm. The default value is \eqn{250} for CB with BiW and \eqn{400+3d^2} for CB and any other random walk and \eqn{500+4d^2} for CG.}
-#' \item{\code{hpoly} }{ A boolean parameter to use H-polytopes in MMC of CB algorithm when the input polytope is a zonotope. The default value is \code{TRUE} when the order of the zonotope is \eqn{<5}, otherwise it is \code{FALSE}.}
-#' }
-#' @param rounding Optional. A string parameter to request a rounding method to be applied in the input polytope before volume computation: a) \code{'min_ellipsoid'}, b) \code{'svd'}, c) \code{'max_ellipsoid'} and d) \code{'none'} for no rounding.
-#' @param seed Optional. A fixed seed for the number generator.
-#'
-#' @references \cite{I.Z.Emiris and V. Fisikopoulos,
-#' \dQuote{Practical polytope volume approximation,} \emph{ACM Trans. Math. Soft.,} 2018.},
-#' @references \cite{A. Chalkis and I.Z.Emiris and V. Fisikopoulos,
-#' \dQuote{Practical Volume Estimation by a New Annealing Schedule for Cooling Convex Bodies,} \emph{CoRR, abs/1905.05494,} 2019.},
-#' @references \cite{B. Cousins and S. Vempala, \dQuote{A practical volume algorithm,} \emph{Springer-Verlag Berlin Heidelberg and The Mathematical Programming Society,} 2015.}
-#'
-#'
-#' @return The approximation of the volume of a convex polytope.
-#' @examples
-#'
-#' # calling SOB algorithm for a H-polytope (5d unit simplex)
-#' HP = gen_cube(5,'H')
-#' pair_vol = volume(HP)
-#'
-#' # calling CG algorithm for a V-polytope (3d simplex)
-#' VP = gen_simplex(3,'V')
-#' pair_vol = volume(VP, settings = list("algorithm" = "CG"))
-#'
-#' # calling CG algorithm for a 2-dimensional zonotope defined as the Minkowski sum of 4 segments
-#' Z = gen_rand_zonotope(2, 4)
-#' pair_vol = volume(Z, settings = list("random_walk" = "RDHR", "walk_length" = 2))
-#'
-#' @export
-volume <- function(P, settings = NULL, rounding = NULL, seed = NULL) {
-    .Call(`_volesti_volume`, P, settings, rounding, seed)
-}
-
-#' An internal Rccp function for the over-approximation of a zonotope
-#'
-#' @param Z A zonotope.
-#' @param fit_ratio Optional. A boolean parameter to request the computation of the ratio of fitness.
-#' @param settings Optional. A list that declares the values of the parameters of CB algorithm.
-#' @param seed Optional. A fixed seed for the number generator.
-#'
-#' @keywords internal
-#'
-#' @return A List that contains a numerical matrix that describes the PCA approximation as a H-polytope and the ratio of fitness.
-zono_approx <- function(Z, fit_ratio = NULL, settings = NULL, seed = NULL) {
-    .Call(`_volesti_zono_approx`, Z, fit_ratio, settings, seed)
 }
 
