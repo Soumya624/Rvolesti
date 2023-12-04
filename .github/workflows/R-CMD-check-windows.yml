@@ -1,7 +1,7 @@
 ##############################################################################
 # GitHub Actions Workflow to test the R interface of volesti
 #
-# Copyright (c) 2020 Vissarion Fisikopoulos
+# Copyright (c) 2023 Vissarion Fisikopoulos
 #
 # Licensed under GNU LGPL.3, see LICENCE file
 ##############################################################################
@@ -45,7 +45,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: Rscript -e "library(rcmdcheck)" -e "rcmdcheck::rcmdcheck(args = c('--no-manual', '--no-install'), error_on = 'error', check_dir = 'check')"
+        run: Rscript -e "library(rcmdcheck)" -e "rcmdcheck::rcmdcheck(args = c('--no-manual'), error_on = 'error', check_dir = 'check')"
 
       - name: Upload check results
         if: failure()
